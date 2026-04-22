@@ -1,0 +1,160 @@
+How to Use the Trading Bot App
+1. Project Purpose
+
+This is a simplified Python CLI trading bot for Binance Futures Testnet.
+
+It can place:
+
+MARKET orders
+LIMIT orders
+
+It supports both:
+
+BUY
+SELL
+
+The application uses Binance Futures Testnet, so no real money is used.
+
+2. Project Structure
+trading_bot/
+  bot/
+    __init__.py
+    client.py
+    orders.py
+    validators.py
+    logging_config.py
+  cli.py
+  README.md
+  requirements.txt
+
+Each file has a separate responsibility:
+
+cli.py              -> takes input from terminal
+validators.py      -> validates symbol, side, order type, quantity, and price
+orders.py          -> builds order parameters
+client.py          -> connects to Binance API and sends signed requests
+logging_config.py  -> creates log file and stores request/response details
+3. Create Virtual Environment
+
+From the project folder:
+
+python -m venv .venv
+
+Activate it:
+
+.venv\Scripts\activate
+
+If PowerShell blocks activation, run:
+
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+
+Then activate again:
+
+.venv\Scripts\activate
+4. Install Dependencies
+pip install -r requirements.txt
+
+Your requirements.txt should contain:
+
+requests==2.32.3
+python-dotenv==1.0.1
+pytest==8.3.2
+5. Create .env File
+
+Create a file named:
+
+.env
+
+inside the main trading_bot folder.
+
+Add this:
+
+BINANCE_API_KEY=your_futures_testnet_api_key
+BINANCE_API_SECRET=your_futures_testnet_api_secret
+BINANCE_FUTURES_BASE_URL=https://testnet.binancefuture.com
+
+Replace the key and secret with your actual Binance Futures Testnet API credentials.
+
+6. Run a MARKET Order
+
+Example BUY market order:
+
+python cli.py --symbol BTCUSDT --side BUY --type MARKET --quantity 0.001
+
+Example SELL market order:
+
+python cli.py --symbol BTCUSDT --side SELL --type MARKET --quantity 0.001
+
+A successful market order should show something like:
+
+Order Response Details
+----------------------
+Order ID     : 13060693066
+Status       : FILLED
+Executed Qty : 0.0010
+Average Price: 78100.000000
+
+Success: Order placed successfully on Binance Futures Testnet.
+7. Run a LIMIT Order
+
+Example BUY limit order:
+
+python cli.py --symbol BTCUSDT --side BUY --type LIMIT --quantity 0.001 --price 50000
+
+Example SELL limit order:
+
+python cli.py --symbol BTCUSDT --side SELL --type LIMIT --quantity 0.001 --price 120000
+
+A successful limit order may show:
+
+Status       : NEW
+Executed Qty : 0.0000
+
+That is okay. NEW means the limit order was placed successfully but has not filled yet.
+
+8. Dry Run Mode
+
+Dry run checks whether the order request is valid without placing a real testnet order.
+
+python cli.py --symbol BTCUSDT --side BUY --type MARKET --quantity 0.001 --dry-run
+
+Limit dry run:
+
+python cli.py --symbol BTCUSDT --side BUY --type LIMIT --quantity 0.001 --price 50000 --dry-run
+9. Check Logs
+
+The app creates logs here:
+
+logs/trading_bot.log
+
+To view logs in PowerShell:
+
+type logs\trading_bot.log
+
+The log file records:
+
+order request summary
+API request
+API response
+success message
+errors if any
+
+Before final submission, you should have logs from at least:
+
+one MARKET order
+one LIMIT order
+10. Clean Logs Before Final Submission
+
+To remove old failed logs:
+
+del logs\trading_bot.log
+
+Then run one fresh market order:
+
+python cli.py --symbol BTCUSDT --side BUY --type MARKET --quantity 0.001
+
+Then run one fresh limit order:
+
+python cli.py --symbol BTCUSDT --side BUY --type LIMIT --quantity 0.001 --price 50000
+
+Now your log file will contain clean successful order logs.
